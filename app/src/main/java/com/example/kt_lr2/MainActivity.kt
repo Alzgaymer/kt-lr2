@@ -8,8 +8,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.kt_lr2.ui.AppViewModelProvider
+import com.example.kt_lr2.ui.planets.PlanetScreen
+import com.example.kt_lr2.ui.planets.PlanetViewModel
 import com.example.kt_lr2.ui.theme.Ktlr2Theme
 
 class MainActivity : ComponentActivity() {
@@ -17,27 +22,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Ktlr2Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
-                }
+                val viewModel:PlanetViewModel = viewModel(factory = AppViewModelProvider.Factory)
+                val planetsState = viewModel.uiState.collectAsState().value
+                PlanetScreen(planetsState, onRetry = viewModel::getPlanets)
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Ktlr2Theme {
-        Greeting("Android")
-    }
-}
